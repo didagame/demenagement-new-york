@@ -447,6 +447,7 @@ footer{padding:10px 0 40px;color:var(--muted);font-size:.78rem}
 .unplace{border:0;background:transparent;color:var(--muted);font-size:.75rem;cursor:pointer;text-decoration:underline;padding:0 2px}
 .unplace:hover{color:var(--stamp)}
 .relu{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:10px 12px;display:grid;gap:6px}
+.slot.need{outline:2px dashed #E07A10;outline-offset:-2px;background:#FFF4E5}
 </style>
 </head>
 <body>
@@ -765,6 +766,9 @@ const PL=[{"id": "jfk", "name": "Aéroport JFK", "area": "Queens, à 20 km de Ma
 /* ---------- État ---------- */
 const KEY="opsiege-ny-v2proto2";
 const PO={"jfk": {"o": ["Les aéroports de New York ont accueilli 145,9 millions de passagers en 2024 : la ville possède de grands aéroports, reliés au monde entier.", "À JFK, 56 % des passagers sont internationaux : la ville possède une population multiculturelle.", "Les aéroports de New York ont accueilli 14,59 millions de passagers en 2024 : la ville possède de grands aéroports."], "h": "rvavhi"}, "port": {"o": ["Le port a traité 87 millions de conteneurs (EVP) en 2024 : New York possède un grand port.", "Le pont de Bayonne a été surélevé pour laisser passer les porte-conteneurs géants : New York possède un grand port.", "Le pont de Bayonne a été surélevé pour laisser passer les bateaux de croisière : New York est un grand centre de tourisme."], "h": "1fqsrpk"}, "liberte": {"o": ["New York a reçu 64,3 millions de visiteurs en 2024 : c'est un centre administratif majeur.", "New York a reçu 6,43 millions de visiteurs en 2024 : c'est un grand centre de tourisme.", "New York a reçu 64,3 millions de visiteurs en 2024 : c'est un grand centre de tourisme."], "h": "pkyruq"}, "wallstreet": {"o": ["La bourse de Shanghai est la première du monde, avec 31,7 billions de dollars : New York est un centre économique majeur.", "Le NYSE est la première bourse du monde, avec 31,7 billions de dollars : New York est un centre économique majeur.", "Le NYSE vaut 31,7 billions de dollars : New York possède une population au haut niveau de formation."], "h": "1155pq1"}, "littleitaly": {"o": ["3,75 % des habitants sont nés dans un autre pays : la population est importante et multiculturelle.", "37,5 % des habitants sont des touristes étrangers : la population est multiculturelle.", "37,5 % des habitants sont nés dans un autre pays et l'agglomération compte 19,9 millions d'habitants : la population est importante et multiculturelle."], "h": "8ckigx"}, "nyu": {"o": ["NYU accueille 27 532 étudiants étrangers : New York est un grand centre de tourisme.", "NYU accueille 27 532 étudiants étrangers, plus que toute autre université américaine : New York attire une population au haut niveau de formation.", "NYU accueille 275 étudiants étrangers : New York attire une population au haut niveau de formation."], "h": "1a1vbh"}, "siliconalley": {"o": ["New York est le 1er pôle mondial de start-ups, devant la Silicon Valley : elle possède des quartiers d'affaires tournés vers l'innovation.", "New York est le 2e pôle mondial de start-ups : elle possède un grand port.", "New York est le 2e pôle mondial de start-ups, derrière la Silicon Valley : elle possède des quartiers d'affaires tournés vers l'innovation."], "h": "1laqr2r"}, "midtown": {"o": ["20 des 500 plus grandes entreprises du monde ont leur siège à New York : la ville accueille des firmes multinationales.", "New York accueille plus de sièges des 500 plus grandes entreprises du monde que toute autre ville.", "20 des 500 plus grandes entreprises du monde ont leur siège à New York : la ville possède de grands aéroports."], "h": "10d9wdt"}, "onu": {"o": ["193 pays sont membres de l'ONU : New York possède une population multiculturelle.", "Les représentants des 193 pays membres de l'ONU se réunissent à New York : la ville est un centre administratif majeur.", "Le gouvernement des États-Unis siège à New York : la ville est un centre administratif majeur."], "h": "b7s2ah"}, "timessquare": {"o": ["Broadway a vendu 1,466 million d'entrées en 2024-2025 : New York est un grand centre de tourisme.", "Broadway a vendu 14,66 millions d'entrées en 2024-2025 : New York est un grand centre de tourisme.", "Broadway a vendu 14,66 millions d'entrées en 2024-2025 : New York est un centre administratif majeur."], "h": "bdm5sm"}, "met": {"o": ["Le Met reçoit plus de 5,7 millions de visiteurs par an, dont 85 % venus de l'étranger : New York est un grand centre de tourisme.", "Le Met reçoit plus de 5,7 millions de visiteurs par an, dont 15 % venus de l'étranger : New York est un grand centre de tourisme.", "Le Met reçoit plus de 5,7 millions de visiteurs par an : New York possède un grand port."], "h": "p99otw"}};
+/* JFK et Little Italy prouvent chacun deux sous-parties du schéma : leur preuve donne deux informations, une par case. */
+const SPLIT={jfk:[["aero","Les aéroports de New York ont accueilli 145,9 millions de passagers en 2024 : la ville possède de grands aéroports."],["reseau","À JFK, 56 % des passagers sont internationaux : New York est reliée au monde entier, c'est un centre de réseau mondial."]],
+  littleitaly:[["taille","L'agglomération de New York compte 19,9 millions d'habitants : la population est importante."],["multi","37,5 % des habitants sont nés dans un autre pays : la population est multiculturelle."]]};
 let st={code:{},bl:{},br1:{},fn:{},notes:{},memo:{},best:{}};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.code)st=Object.assign(st,s);}catch(e){}
 st.br1=st.br1||{};
@@ -1080,7 +1084,7 @@ function renderLieu(id){
         <div class="lab">Question 4 · retenir une preuve pour le rapport</div>
         <p class="qtext">Quelle phrase est une preuve juste, tirée du document ?</p>
         <div class="fnbtns three">${PO[p.id].o.map((o,j)=>`<button type="button" class="fnbtn pfbtn ${st.notes[p.id]===o?"right":""}" data-j="${j}" ${st.notes[p.id]?"disabled":""}>${esc(o)}</button>`).join("")}</div>
-        <p class="fb ${st.notes[p.id]?"good":""}" id="pfb">${st.notes[p.id]?"Preuve gardée pour votre rapport.":""}</p>
+        <p class="fb ${st.notes[p.id]?"good":""}" id="pfb">${st.notes[p.id]?(SPLIT[p.id]?"Preuve gardée : elle donne deux informations pour votre rapport.":"Preuve gardée pour votre rapport."):""}</p>
       </div>
       <div class="won ${done(p.id)?"show":""}" id="won">Case${p.lv.length>1?"s":""} du schéma coloriée${p.lv.length>1?"s":""} : ${p.lv.map(l=>LF[l]).join(" + ")}. <a href="#plan">Choisir un autre lieu →</a></div>
     </div>
@@ -1090,7 +1094,7 @@ function renderLieu(id){
   el.querySelector("#hb").onclick=()=>el.querySelector("#hint").classList.toggle("show");
   el.querySelectorAll(".pfbtn").forEach(b=>b.onclick=()=>{
     const fb=el.querySelector("#pfb"),o=PO[p.id].o[+b.dataset.j];
-    if(fnv(p.id+"|p|"+o)===PO[p.id].h){b.classList.add("right");el.querySelectorAll(".pfbtn").forEach(x=>x.disabled=true);st.notes[p.id]=o;save();fb.className="fb good";fb.textContent="Preuve gardée pour votre rapport.";mark(3);}
+    if(fnv(p.id+"|p|"+o)===PO[p.id].h){b.classList.add("right");el.querySelectorAll(".pfbtn").forEach(x=>x.disabled=true);st.notes[p.id]=o;save();fb.className="fb good";fb.textContent=SPLIT[p.id]?"Preuve gardée : elle donne deux informations pour votre rapport.":"Preuve gardée pour votre rapport.";mark(3);}
     else{b.classList.add("wrong");b.disabled=true;fb.className="fb bad";fb.textContent="Cette phrase contient une erreur : un chiffre faux ou une mauvaise conclusion. Relisez le document.";}
   });
   el.querySelector("#cf").onsubmit=e=>{
@@ -1258,31 +1262,37 @@ const LIM=["Londres et Hong Kong sont presque aussi bien classées que New York 
 const CONC=["New York réunit toutes les caractéristiques d'une ville mondiale : c'est un centre de commandement, même si d'autres villes la concurrencent sur certains points.", "New York n'est pas une ville mondiale, car Pékin accueille plus de sièges de grandes entreprises.", "New York est une ville mondiale uniquement grâce à ses touristes."],HCONC="1l2mzhk";
 let selCard=null;
 function cards(){
-  const c=PL.filter(p=>st.notes[p.id]).map(p=>({id:"p:"+p.id,txt:st.notes[p.id],from:p.name,ok:k=>l2of(p).includes(k)}));
+  const c=[];
+  PL.filter(p=>st.notes[p.id]).forEach(p=>{
+    if(SPLIT[p.id])SPLIT[p.id].forEach(([k,t],i)=>c.push({id:"p:"+p.id+":"+i,txt:t,from:p.name,ok:x=>x===k}));
+    else c.push({id:"p:"+p.id,txt:st.notes[p.id],from:p.name,ok:k=>l2of(p).includes(k)});
+  });
   LIM.forEach((t,i)=>c.push({id:"l:"+i,txt:t,from:"Comparaison avec d'autres villes",ok:k=>k==="lim"}));
   return c;
 }
 function renderRapport(){
   st.cls=st.cls||{};
+  ["p:jfk","p:littleitaly"].forEach(k=>{if(k in st.cls)delete st.cls[k];});
   document.getElementById("trapR").textContent=TRAP;
-  const L=lit(),brMiss=BRK.filter(k=>!BR[k].leaves.some(l=>L[l].length)).map(k=>BR[k].name);
-  const n=PL.filter(p=>st.notes[p.id]).length;
-  document.getElementById("rapAlert").innerHTML=n===0?`<div class="alert">Vous n'avez encore retenu aucune preuve. Visitez des lieux sur le <a href="#plan">plan</a> et répondez à la question 4 de chaque lieu.</div>`:(brMiss.length?`<div class="alert">Votre plan aura des trous : aucune preuve pour ${brMiss.join(", ")}. Vous pouvez retourner sur le <a href="#plan">plan</a>.</div>`:"");
+  const n=PL.filter(p=>st.notes[p.id]).length,C0=cards();
+  const miss=BRK.flatMap(b=>L2[b].map(([k])=>k)).filter(k=>!C0.some(c=>c.ok(k))).map(k=>L2LAB[k]);
+  document.getElementById("rapAlert").innerHTML=n===0?`<div class="alert">Vous n'avez encore retenu aucune preuve. Visitez des lieux sur le <a href="#plan">plan</a> et répondez à la question 4 de chaque lieu.</div>`:(miss.length?`<div class="alert">Votre plan aura des trous : aucune information recueillie pour ${miss.join(", ")}. Retournez sur le <a href="#plan">plan</a> visiter d'autres lieux.</div>`:"");
   const C=cards(),placed=C.filter(c=>st.cls[c.id]),left=C.filter(c=>!st.cls[c.id]);
   if(selCard&&!left.some(c=>c.id===selCard))selCard=null;
   document.getElementById("clsCount").textContent=`${placed.length} / ${C.length} informations organisées`;
   document.getElementById("pool").innerHTML=left.length?left.map(c=>`<button type="button" class="icard ${selCard===c.id?"sel":""}" data-id="${c.id}"><span class="from">${esc(c.from)}</span>${esc(c.txt)}</button>`).join(""):`<p class="small"><b>Toutes vos informations sont organisées.</b> Choisissez maintenant la conclusion, en bas du plan.</p>`;
   const inSlot=k=>placed.filter(c=>st.cls[c.id]===k).map(c=>`<li class="${st.relu&&!c.ok(k)?"bad":""}">${esc(c.txt)} <span class="muted small">(${esc(c.from)})</span> <button type="button" class="unplace" data-id="${c.id}" title="Retirer cette information du plan">↩ retirer</button></li>`).join("");
-  const slot=(k,lab)=>{const li=inSlot(k);return `<div class="slot ${li?"filled":""} ${selCard?"armed":""}" data-k="${k}" role="button" tabindex="0" aria-label="Placer ici : ${esc(lab)}"><span class="slh">${lab}</span>${li?`<ul class="prlist">${li}</ul>`:`<span class="small muted">vide</span>`}</div>`;};
+  const slot=(k,lab)=>{const li=inSlot(k);return `<div class="slot ${li?"filled":(!left.length&&C.length?"need":"")} ${selCard?"armed":""}" data-k="${k}" role="button" tabindex="0" aria-label="Placer ici : ${esc(lab)}"><span class="slh">${lab}</span>${li?`<ul class="prlist">${li}</ul>`:`<span class="small muted">vide</span>`}</div>`;};
   const ROM=["I","II","III"],LET="abc";
   document.getElementById("planTree").innerHTML=BRK.map((b,bi)=>`<div class="atb" style="--c:${BR[b].color};--bg:${BR[b].bg}"><div class="atbh">${ROM[bi]}. ${BRT[b]}</div>`+L2[b].map(([k],ki)=>slot(k,`${LET[ki]}) ${L2LAB[k]}`)).join("")+`</div>`).join("")
     +`<div class="atb" style="--c:#5B6476;--bg:#E4E2DA"><div class="atbh">IV. Les limites : ce qui pose problème</div>${slot("lim","Points faibles et villes concurrentes")}</div>`;
-  const all=C.length>0&&!left.length,cOK=st.concl&&fnv("concl|"+st.concl)===HCONC;
+  const KEYS=BRK.flatMap(b=>L2[b].map(([k])=>k)).concat(["lim"]),empty=KEYS.filter(k=>!placed.some(c=>st.cls[c.id]===k));
+  const placedAll=C.length>0&&!left.length,all=placedAll&&!empty.length,cOK=st.concl&&fnv("concl|"+st.concl)===HCONC;
   const bad=placed.filter(c=>!c.ok(st.cls[c.id])).length;
-  document.getElementById("conclZone").innerHTML=(all?`<div class="relu"><button type="button" class="btn line" id="reluBtn">Faire relire mon plan par Tata Wallout</button><p class="small" id="reluTxt">${st.relu?(bad?`Tata Wallout a relu : <b>${bad} information${bad>1?"s semblent mal placées":" semble mal placée"}</b> (encadrée${bad>1?"s":""} en rouge). Vous pouvez ${bad>1?"les":"la"} déplacer, ou garder votre choix si vous savez le justifier.`:"Tata Wallout a relu : votre plan est bien organisé."):"Facultatif : avant de conclure, demandez un avis sur votre plan."}</p></div>`:"")+`<div class="atb concl ${all?"":"locked"}" style="--c:#16223B;--bg:#F4B400"><div class="atbh">Conclusion</div>
-    <p class="small">${all?"Quelle conclusion répond le mieux à la question de la présidente ?":"Organisez d'abord toutes les informations recueillies."}</p>
+  document.getElementById("conclZone").innerHTML=(placedAll?`<div class="relu"><button type="button" class="btn line" id="reluBtn">Faire relire mon plan par Tata Wallout</button><p class="small" id="reluTxt">${st.relu?(bad?`Tata Wallout a relu : <b>${bad} information${bad>1?"s semblent mal placées":" semble mal placée"}</b> (encadrée${bad>1?"s":""} en rouge). Vous pouvez ${bad>1?"les":"la"} déplacer, ou garder votre choix si vous savez le justifier.`:"Tata Wallout a relu : votre plan est bien organisé."):"Facultatif : avant de conclure, demandez un avis sur votre plan."}</p></div>`:"")+`<div class="atb concl ${all?"":"locked"}" style="--c:#16223B;--bg:#F4B400"><div class="atbh">Conclusion</div>
+    <p class="small">${all?"Quelle conclusion répond le mieux à la question de la présidente ?":(!placedAll?"Organisez d'abord toutes les informations recueillies.":`Chaque case du plan doit contenir au moins une information : ${empty.length>1?`il reste ${empty.length} cases vides`:"il reste une case vide"} (encadrée${empty.length>1?"s":""} en pointillés orange). Visitez d'autres lieux sur le <a href="#plan">plan</a> ou déplacez une information.`)}</p>
     <div class="fnbtns three">${CONC.map((t,j)=>`<button type="button" class="opt cbtn ${st.concl===t?(cOK?"right":"wrong"):""}" data-j="${j}" ${cOK||!all?"disabled":""}>${esc(t)}</button>`).join("")}</div>
-    <p class="fb" id="cfb2">${cOK?"Rapport terminé : il peut partir chez Mme Oliot.":""}</p></div>`;
+    <p class="fb" id="cfb2">${cOK&&all?"Rapport terminé : il peut partir chez Mme Oliot.":""}</p></div>`;
   document.querySelectorAll("#pool .icard").forEach(b=>b.onclick=()=>{selCard=b.dataset.id;document.getElementById("clsFb").textContent="";renderRapport();});
   const placeIn=b=>{
     const fb=document.getElementById("clsFb");
