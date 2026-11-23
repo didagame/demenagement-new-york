@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Opération Siège New York V2</title>
+<title>Déménagement New York</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -448,18 +448,30 @@ footer{padding:10px 0 40px;color:var(--muted);font-size:.78rem}
 .unplace:hover{color:var(--stamp)}
 .relu{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:10px 12px;display:grid;gap:6px}
 .slot.need{outline:2px dashed #E07A10;outline-offset:-2px;background:#FFF4E5}
+/* Grandes lettres : même réglage que les autres jeux (classe grand-texte, choix gardé d'un jeu à l'autre) */
+.btn-taille{display:inline-flex;align-items:center;gap:6px;margin-left:6px;padding:4px 12px;border:1px solid #ffffff66;border-radius:999px;background:transparent;color:#fff;font:600 .88rem/1.2 var(--body);cursor:pointer}
+.btn-taille b{font-weight:700;font-size:1.05em;letter-spacing:-.02em}
+.btn-taille:hover{background:#ffffff1a}
+.btn-taille[aria-pressed="true"]{background:var(--cab);border-color:var(--cab);color:var(--ink)}
+.btn-taille:focus-visible{outline:3px solid var(--cab);outline-offset:2px}
+html.grand-texte{font-size:125%}
+html.grand-texte body{font-size:20px}
+html.grand-texte .pin text{font-size:15px!important}
+@media print{.btn-taille{display:none}}
 </style>
+<script>try{if(localStorage.getItem("jeux-grand-texte")==="1")document.documentElement.classList.add("grand-texte");}catch(e){}</script>
 </head>
 <body>
 
 <div class="bar">
   <div class="wrap">
-    <a class="brand" href="#accueil">OPÉRATION SIÈGE <span>· NEW YORK</span></a>
+    <a class="brand" href="#accueil">DÉMÉNAGEMENT <span>· NEW YORK</span></a>
     <nav class="tabs" aria-label="Sections">
       <a href="#accueil" data-v="accueil">Accueil</a>
       <a href="#plan" data-v="plan">Plan</a>
       <a href="#jeu-taxi" data-v="jeu-taxi">Jeu du taxi</a>
       <a href="#rapport" data-v="rapport">Rapport</a>
+      <button type="button" class="btn-taille" id="btn-taille" aria-pressed="false" title="Agrandir les lettres de tous les textes"><b aria-hidden="true">A+</b> Grandes lettres</button>
     </nav>
     <span class="chrono" id="chrono" hidden></span>
   </div>
@@ -471,7 +483,7 @@ footer{padding:10px 0 40px;color:var(--muted);font-size:.78rem}
 <section class="view" id="v-accueil">
   <div class="idpage">
     <div class="eyebrow">Géographie · Terminale · New York, ville mondiale</div>
-    <h1 class="title">Opération Siège</h1>
+    <h1 class="title">Déménagement</h1>
     <p class="lead">Avant de commencer, voici qui vous êtes.</p>
     <figure class="dubai">
       <svg viewBox="0 0 820 230" role="img" aria-label="Illustration de Dubaï au coucher du soleil : la tour Burj Khalifa domine les gratte-ciel, l'hôtel en forme de voile se dresse dans la mer, des palmiers et le désert au loin">
@@ -1455,6 +1467,20 @@ function route(){
 }
 buildMap();
 window.addEventListener("hashchange",route);route();
+</script>
+<script>
+(function(){
+  var r=document.documentElement,b=document.getElementById("btn-taille");
+  function maj(){b.setAttribute("aria-pressed",r.classList.contains("grand-texte")?"true":"false");}
+  maj();
+  b.addEventListener("click",function(){
+    var on=!r.classList.contains("grand-texte");
+    r.classList.toggle("grand-texte",on);
+    try{localStorage.setItem("jeux-grand-texte",on?"1":"0");}catch(e){}
+    maj();
+    try{window.dispatchEvent(new Event("resize"));}catch(e){}
+  });
+})();
 </script>
 </body>
 </html>
