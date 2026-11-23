@@ -14,9 +14,9 @@ Une PDG fictive, Jeanne Oliot, veut transférer le siège de son groupe de Duba�
 4. **Plan** : une vue **3D** de New York (ou un plan 2D) avec 11 lieux à visiter dans l'ordre de son choix. On y voit les cinq arrondissements (Manhattan, Bronx, Queens, Brooklyn, Staten Island), les grands ponts et les tunnels vers le New Jersey.
 5. **Lieux** : pour chacun, un document chiffré à lire, une question de compréhension, le classement du lieu dans le schéma « ville mondiale » (population, transports, centre financier et tertiaire), puis le choix de la phrase-preuve juste parmi trois.
 6. **Jeu du taxi** : pause jeu en bonus.
+7. **Rapport** : le plan est préétabli (I. population, II. transports, III. centre financier et tertiaire, IV. limites). L'élève y place librement les informations recueillies, peut les déplacer, demande s'il le souhaite une relecture à Tata Wallout, puis choisit la conclusion.
 
 Un bouton **A+ Grandes lettres**, dans la barre du haut, agrandit tous les textes ; le choix est gardé d'un jeu didagame à l'autre.
-7. **Rapport** : le plan est préétabli (I. population, II. transports, III. centre financier et tertiaire, IV. limites). L'élève y place librement les informations recueillies, peut les déplacer, demande s'il le souhaite une relecture à Tata Wallout, puis choisit la conclusion.
 
 ## Utiliser le jeu
 
